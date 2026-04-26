@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Starlink Direct to Phone + eSIM | Nigeria</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Paystack inline script -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif; background: #daf1da; color: #0a240a; line-height: 1.4; font-size: 0.875rem; -webkit-tap-highlight-color: transparent; }
+        .container { max-width: 100%; padding: 0.6rem 0.5rem; }
+        .page-title { margin-bottom: 0.2rem; }
+        .page-title h2 { font-size: 1.2rem; font-weight: 700; color: #1d541d; letter-spacing: -0.3px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 0.4rem; border-bottom: 2px solid #2d7a2d; padding-bottom: 0.3rem; }
+        .page-title i { color: #2d7a2d; font-size: 1.3rem; }
+        .top-bar { background: #1a4f1a; border-radius: 20px; padding: 0.7rem 1rem; margin-bottom: 0.8rem; display: flex; align-items: center; justify-content: space-between; border: 1px solid #2d6a2d; box-shadow: 0 4px 12px rgba(0, 40, 0, 0.2); flex-wrap: wrap; gap: 0.5rem; }
+        .logo h1 { font-size: 1.1rem; font-weight: 700; color: #ffffff; letter-spacing: -0.3px; line-height: 1.2; }
+        .logo span { font-size: 0.65rem; color: #c0e0c0; display: block; font-weight: 500; margin-top: 0; }
+        .network-support-wrapper { display: flex; flex-direction: column; margin-top: 0.2rem; }
+        .support-text { font-size: 0.6rem; color: #c0e0c0; margin-bottom: 0.1rem; font-weight: 500; }
+        .network-support { display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.6rem; color: #c0e0c0; }
+        .network-item { display: inline-flex; align-items: center; gap: 0.2rem; white-space: nowrap; }
+        .network-item i { color: #c0e0c0; font-size: 0.55rem; }
+        .status-chip { background: #2d7a2d; border-radius: 30px; padding: 0.3rem 0.7rem; font-size: 0.65rem; font-weight: 600; color: white; display: flex; align-items: center; gap: 0.3rem; border: 1px solid #4fa04f; white-space: nowrap; }
+        .quick-panel { background: #1d541d; border-radius: 20px; padding: 0.8rem 1rem; margin-bottom: 1rem; border: 1px solid #2d6a2d; box-shadow: 0 6px 0 #0f3a0f; }
+        .quick-panel h2 { color: #ffffff; font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; }
+        .quick-panel p { color: #c8e6c8; font-size: 0.7rem; margin-bottom: 0.5rem; }
+        .tag-cloud { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+        .tag-new { background: #2d7a2d; border-radius: 30px; padding: 0.2rem 0.7rem; font-size: 0.6rem; font-weight: 600; color: white; border: 1px solid #4fa04f; }
+        @media (max-width: 380px) {
+            .top-bar { padding: 0.5rem 0.7rem; }
+            .logo h1 { font-size: 0.95rem; }
+            .logo span { font-size: 0.55rem; }
+            .status-chip { font-size: 0.55rem; padding: 0.2rem 0.5rem; }
+            .quick-panel { padding: 0.6rem 0.8rem; }
+            .quick-panel h2 { font-size: 0.85rem; }
+            .quick-panel p { font-size: 0.6rem; }
+            .tag-new { font-size: 0.55rem; padding: 0.15rem 0.5rem; }
+        }
+        .scroll-tabs { display: flex; gap: 0.4rem; overflow-x: auto; margin-bottom: 1.2rem; padding-bottom: 0.2rem; scrollbar-width: none; position: sticky; top: 0; z-index: 10; background: #daf1da; padding-top: 0.3rem; padding-bottom: 0.5rem; }
+        .scroll-tabs::-webkit-scrollbar { display: none; }
+        .tab-pill { background: #e6f3e6; border: 1px solid #2d7a2d; border-radius: 30px; padding: 0.5rem 1.2rem; font-size: 0.8rem; font-weight: 600; color: #1d541d; white-space: nowrap; cursor: pointer; transition: 0.1s; flex-shrink: 0; }
+        .tab-pill.active { background: #1d541d; border-color: #1d541d; color: white; }
+        .category-section { display: flex; flex-direction: column; gap: 0.5rem; scroll-margin-top: 60px; }
+        .category-header { display: flex; align-items: center; justify-content: space-between; padding: 0 0.2rem; }
+        .category-title { font-size: 1rem; font-weight: 700; color: #1d541d; display: flex; align-items: center; gap: 0.3rem; }
+        .category-title i { color: #2d7a2d; font-size: 0.9rem; }
+        .category-subtitle { font-size: 0.7rem; color: #1d541d; background: #c8e6c8; padding: 0.2rem 0.7rem; border-radius: 30px; font-weight: 600; }
+        .category-bundles { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+        .bundle-card { background: #ffffff; border-radius: 12px; padding: 0.9rem 0.7rem; border: 1px solid #2d7a2d; box-shadow: 0 3px 8px rgba(0, 40, 0, 0.1); display: flex; flex-direction: column; position: relative; }
+        .bundle-card.popular { border-left: 5px solid #f4b740; }
+        .bundle-card.featured { border-left: 5px solid #1d541d; }
+        .bundle-badge { position: absolute; top: 0.4rem; right: 0.4rem; font-size: 0.55rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 20px; letter-spacing: 0.3px; text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .bundle-badge.popular-badge { background: #ff8c42; color: white; border: 1px solid #e07a2c; }
+        .bundle-badge.hot-badge { background: #e63946; color: white; border: 1px solid #c92a36; }
+        .bundle-badge.value-badge { background: #4361ee; color: white; border: 1px solid #3651c9; }
+        .bundle-badge:not(.popular-badge):not(.hot-badge):not(.value-badge) { background: #1d541d; color: white; }
+        .bundle-title { font-weight: 700; font-size: 0.9rem; color: #0f3a0f; margin-bottom: 0.15rem; padding-right: 1.2rem; }
+        .bundle-subtitle { font-size: 0.65rem; color: #2d7a2d; margin-bottom: 0.6rem; line-height: 1.2; }
+        .bundle-details { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+        .bundle-price { font-weight: 800; color: #1d541d; font-size: 1.1rem; line-height: 1; }
+        .bundle-buy-btn { background: #1d541d; border: none; border-radius: 30px; padding: 0.4rem 0.9rem; font-size: 0.7rem; font-weight: 700; color: white; cursor: pointer; transition: 0.1s; border: 1px solid #2d7a2d; }
+        .bundle-buy-btn:active { background: #0f3a0f; }
+        .footer { text-align: center; padding: 1.2rem 0.2rem 0.3rem; color: #1d541d; font-size: 0.65rem; border-top: 2px solid #2d7a2d; margin-top: 1.2rem; display: flex; justify-content: space-between; font-weight: 600; }
+        .footer-logo { font-weight: 700; color: #1d541d; }
+        .swal2-popup { border-radius: 16px !important; padding: 1rem 0.8rem !important; width: 94% !important; max-width: 340px !important; margin: 0 auto !important; font-size: 0.8rem !important; }
+        .swal2-title { font-size: 1.1rem !important; color: #1d541d !important; padding: 0 !important; margin-bottom: 0.5rem !important; }
+        .swal2-html-container { margin: 0 !important; padding: 0 !important; overflow: visible !important; }
+        .modal-content { text-align: left; width: 100%; }
+        .modal-bundle-name { background: #e6f3e6; padding: 0.5rem; border-radius: 10px; margin-bottom: 0.8rem; font-weight: 600; color: #1d541d; text-align: center; font-size: 0.85rem; border: 1px solid #2d7a2d; word-break: break-word; }
+        .input-wrapper { margin-bottom: 0.8rem; }
+        .input-label { display: flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; font-weight: 600; color: #1d541d; margin-bottom: 0.25rem; }
+        .phone-input-group { display: flex; border: 1.5px solid #2d7a2d; border-radius: 12px; overflow: hidden; background: white; }
+        .phone-prefix { background: #e6f3e6; padding: 0.6rem 0.7rem; font-weight: 600; color: #1d541d; font-size: 0.8rem; white-space: nowrap; }
+        .phone-input { border: none; padding: 0.6rem 0.7rem; width: 100%; outline: none; font-size: 0.85rem; }
+        .phone-input::placeholder { color: #a0b8a0; font-size: 0.75rem; }
+        .input-note { font-size: 0.6rem; color: #2d7a2d; margin-top: 0.2rem; }
+        .summary-box { background: #e6f3e6; border-radius: 12px; padding: 0.6rem; margin: 0.8rem 0; border: 1px solid #2d7a2d; }
+        .summary-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; margin-bottom: 0.2rem; }
+        .summary-row.total { font-weight: 700; color: #1d541d; font-size: 0.85rem; margin-top: 0.3rem; padding-top: 0.3rem; border-top: 1px dashed #2d7a2d; }
+        .secure-note { color: #2d7a2d; font-size: 0.6rem; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.2rem; }
+        .swal2-confirm { background: #1d541d !important; border-radius: 30px !important; font-weight: 600 !important; padding: 0.6rem 1.2rem !important; font-size: 0.8rem !important; margin: 0 !important; border: 1px solid #2d7a2d !important; }
+        .swal2-cancel { background: #f0f0f0 !important; color: #1d541d !important; border-radius: 30px !important; font-weight: 600 !important; padding: 0.6rem 1.2rem !important; font-size: 0.8rem !important; border: 1px solid #2d7a2d !important; }
+        .swal2-actions { margin: 0.5rem 0 0 !important; gap: 0.5rem !important; }
+        .status-modal-content { text-align: center; padding: 0.2rem; }
+        .status-icon { font-size: 2.2rem; margin-bottom: 0.3rem; }
+        .status-details { background: #e6f3e6; padding: 0.6rem; border-radius: 12px; margin: 0.8rem 0; font-size: 0.8rem; border: 1px solid #2d7a2d; }
+        .status-details div { word-break: break-word; }
+        @media (max-width: 350px) { .category-bundles { gap: 0.4rem; } .bundle-card { padding: 0.7rem 0.5rem; } .bundle-title { font-size: 0.8rem; } }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(3px); }
+        .loading-overlay.active { display: flex; }
+        .loading-content { background: white; padding: 2rem; border-radius: 20px; text-align: center; max-width: 80%; border: 2px solid #1d541d; }
+        .loading-spinner { border: 4px solid #e6f3e6; border-top: 4px solid #1d541d; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading-text { color: #1d541d; font-weight: 600; margin-bottom: 0.5rem; }
+        .loading-subtext { color: #2d7a2d; font-size: 0.75rem; }
+        .swal2-deny.prominent-esim-btn { background: #f4b740 !important; color: #1d541d !important; font-weight: 800 !important; border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transform: scale(1.02); }
+        .swal2-confirm.secondary-yes-btn { background: #e6f3e6 !important; color: #1d541d !important; border: 1px solid #2d7a2d !important; font-weight: 600 !important; }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Processing...</div>
+            <div class="loading-subtext">Please wait</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-title">
+            <h2><i class="fas fa-satellite"></i> STARLINK DIRECT TO PHONE + eSIM • NIGERIA</h2>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="top-bar">
+            <div class="logo">
+                <h1>Starlink Data Bundles</h1>
+                <div class="network-support-wrapper">
+                    <div class="support-text">Supports all Nigerian networks</div>
+                    <div class="network-support">
+                        <span class="network-item"><i class="fas fa-check-circle"></i> MTN Nigeria</span>
+                        <span class="network-item"><i class="fas fa-check-circle"></i> Glo</span>
+                        <span class="network-item"><i class="fas fa-check-circle"></i> Airtel</span>
+                        <span class="network-item"><i class="fas fa-check-circle"></i> 9mobile</span>
+                    </div>
+                </div>
+            </div>
+            <div class="status-chip">
+                <i class="fa-solid fa-bolt"></i> 4G/5G
+            </div>
+        </div>
+
+        <div class="quick-panel">
+            <h2>Affordable Data Bundles (₦)</h2>
+            <p>Fast mobile data • Pay with OPay / Bank / USSD</p>
+            <div class="tag-cloud">
+                <span class="tag-new">Daily</span>
+                <span class="tag-new">Weekly</span>
+                <span class="tag-new">Monthly</span>
+                <span class="tag-new">Unlimited</span>
+            </div>
+        </div>
+
+        <div class="scroll-tabs" id="tabContainer">
+            <button class="tab-pill" data-category="all">All Bundles</button>
+            <button class="tab-pill" data-category="daily">Daily</button>
+            <button class="tab-pill" data-category="weekly">Weekly</button>
+            <button class="tab-pill" data-category="monthly">Monthly</button>
+            <button class="tab-pill" data-category="unlimited">Unlimited</button>
+        </div>
+
+        <div class="bundles-grid" id="bundles-container"></div>
+
+        <div class="footer">
+            <div class="footer-logo">Starlink Nigeria</div>
+            <div>© 2025 • Paystack + eSIM</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+    <script>
+    const PAYSTACK_PUBLIC_KEY = 'pk_live_225fe228f459e9a172a11f15732508faff758a4b';
+
+    // ⚡ Priority order: OPay → Bank Transfer → Mobile Money → Card
+    const PAYMENT_CHANNELS = ['opay', 'bank_transfer', 'mobile_money', 'card'];
+
+    const bundleData = {
+        daily: {
+            id: 'daily', title: 'Daily Bundles', icon: 'fas fa-sun', subtitle: 'Short-term heavy usage',
+            bundles: [
+                { id: 1, title: '24 Hours - 5GB', subtitle: 'Fast daily data', priceNGN: 450, badge: null },
+                { id: 2, title: '24 Hours - 10GB', subtitle: 'Double data intensive', priceNGN: 750, badge: 'HOT' }
+            ]
+        },
+        weekly: {
+            id: 'weekly', title: 'Weekly Bundles', icon: 'fas fa-calendar-week', subtitle: 'Ideal for weekly browsing',
+            bundles: [
+                { id: 3, title: '3 Days - 8GB', subtitle: 'Weekend extreme', priceNGN: 1000, badge: 'VALUE' },
+                { id: 4, title: '7 Days - 12GB', subtitle: 'Full week connectivity', priceNGN: 1200, badge: null },
+                { id: 5, title: '7 Days - 20GB', subtitle: 'High data streaming', priceNGN: 1600, badge: null },
+                { id: 6, title: '14 Days - 15GB', subtitle: 'Two-week balanced', priceNGN: 1350, badge: null }
+            ]
+        },
+        monthly: {
+            id: 'monthly', title: 'Monthly Bundles', icon: 'fas fa-calendar-alt', subtitle: 'Best value for regular users',
+            bundles: [
+                { id: 7, title: '21 Days - 18GB', subtitle: 'Three-week package', priceNGN: 1450, badge: null },
+                { id: 8, title: '30 Days - 25GB', subtitle: 'Best seller', priceNGN: 1950, badge: 'POPULAR' },
+                { id: 9, title: '30 Days - 50GB', subtitle: 'Double data monthly', priceNGN: 2900, badge: null },
+                { id: 10, title: '30 Days - 100GB', subtitle: 'Heavy user', priceNGN: 4500, badge: 'HOT' }
+            ]
+        },
+        unlimited: {
+            id: 'unlimited', title: 'Unlimited Bundles', icon: 'fas fa-infinity', subtitle: 'Truly unlimited',
+            bundles: [
+                { id: 11, title: '3 Days - Unlimited', subtitle: 'Short unlimited', priceNGN: 1100, badge: null },
+                { id: 12, title: '7 Days - Unlimited', subtitle: 'Week unlimited', priceNGN: 1800, badge: null },
+                { id: 14, title: '14 Days - Unlimited', subtitle: 'Two weeks unlimited', priceNGN: 1900, badge: 'VALUE' },
+                { id: 13, title: '30 Days - Unlimited', subtitle: 'Full month', priceNGN: 3400, badge: 'POPULAR' }
+            ]
+        }
+    };
+
+    let isProcessing = false;
+    let isESIMProcessing = false;
+    const tabs = document.querySelectorAll('.tab-pill');
+    const bundlesContainer = document.getElementById('bundles-container');
+
+    function showLoading(message = "Processing...") {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.querySelector('.loading-text').textContent = message;
+        overlay.classList.add('active');
+    }
+    function hideLoading() { document.getElementById('loadingOverlay').classList.remove('active'); }
+
+    function showToast(message, icon = 'success') {
+        Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 2500, timerProgressBar: true }).fire({ icon, title: message });
+    }
+
+    function validateNigeriaPhone(phone) {
+        let cleaned = phone.replace(/\D/g, '');
+        if (cleaned.startsWith('234')) cleaned = cleaned.substring(3);
+        if (cleaned.startsWith('0')) cleaned = cleaned.substring(1);
+        if (cleaned.length !== 10) throw new Error('Enter a valid Nigerian number (e.g., 08031234567)');
+        if (!['7','8','9'].includes(cleaned.charAt(0))) throw new Error('Nigerian mobile numbers start with 7, 8, or 9');
+        return `234${cleaned}`;
+    }
+
+    function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+    function formatPhoneDisplay(phone234) {
+        if (!phone234 || phone234.length !== 13) return phone234;
+        return '0' + phone234.substring(3);
+    }
+
+    function renderAllBundles() {
+        bundlesContainer.innerHTML = '';
+        for (const [categoryKey, category] of Object.entries(bundleData)) {
+            const section = document.createElement('div');
+            section.className = 'category-section';
+            section.id = `section-${categoryKey}`;
+            section.innerHTML = `
+                <div class="category-header">
+                    <div class="category-title"><i class="${category.icon}"></i>${category.title}</div>
+                    <div class="category-subtitle">${category.subtitle}</div>
+                </div>
+                <div class="category-bundles" id="bundles-${categoryKey}"></div>
+            `;
+            const bundlesGrid = section.querySelector('.category-bundles');
+            category.bundles.forEach(bundle => {
+                const card = document.createElement('div');
+                card.className = 'bundle-card';
+                if (bundle.badge === 'POPULAR') card.classList.add('popular');
+                if (bundle.badge === 'VALUE') card.classList.add('featured');
+                let badgeClass = '';
+                if (bundle.badge === 'POPULAR') badgeClass = 'popular-badge';
+                else if (bundle.badge === 'HOT') badgeClass = 'hot-badge';
+                else if (bundle.badge === 'VALUE') badgeClass = 'value-badge';
+                card.innerHTML = `
+                    ${bundle.badge ? `<div class="bundle-badge ${badgeClass}">${bundle.badge}</div>` : ''}
+                    <div class="bundle-title">${bundle.title}</div>
+                    <div class="bundle-subtitle">${bundle.subtitle}</div>
+                    <div class="bundle-details">
+                        <div><div class="bundle-price">₦ ${bundle.priceNGN}</div></div>
+                        <button class="bundle-buy-btn" data-title="${bundle.title}" data-price-ngn="${bundle.priceNGN}">BUY</button>
+                    </div>
+                `;
+                bundlesGrid.appendChild(card);
+            });
+            bundlesContainer.appendChild(section);
+        }
+    }
+
+    function setupEventListeners() {
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const category = tab.dataset.category;
+                if (category === 'all') window.scrollTo({ top: 0, behavior: 'smooth' });
+                else document.getElementById(`section-${category}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+        bundlesContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('bundle-buy-btn')) {
+                selectDataBundle({
+                    title: e.target.dataset.title,
+                    priceNGN: parseInt(e.target.dataset.priceNgn)
+                });
+            }
+        });
+    }
+
+    function selectDataBundle(bundle) {
+        Swal.fire({
+            title: 'Buy Data Bundle',
+            html: `
+                <div class="modal-content">
+                    <div class="modal-bundle-name">${bundle.title}</div>
+                    <div class="input-wrapper">
+                        <label class="input-label"><i class="fas fa-mobile-alt"></i> Recipient Mobile (Nigeria)</label>
+                        <div class="phone-input-group">
+                            <div class="phone-prefix">+234</div>
+                            <input type="tel" class="phone-input" id="data-phone" placeholder="08031234567" maxlength="15">
+                        </div>
+                        <p class="input-note">We'll send data to this Nigerian number</p>
+                    </div>
+                    <div class="input-wrapper">
+                        <label class="input-label"><i class="fas fa-envelope"></i> Email Address</label>
+                        <input type="email" class="phone-input" id="data-email" placeholder="you@example.com" style="border:1.5px solid #2d7a2d; border-radius:12px;">
+                        <p class="input-note">For payment receipt and eSIM delivery</p>
+                    </div>
+                    <div class="summary-box">
+                        <div class="summary-row"><span>Bundle:</span><span><strong>${bundle.title}</strong></span></div>
+                        <div class="summary-row total"><span>Total (NGN):</span><span><strong>₦ ${bundle.priceNGN}</strong></span></div>
+                    </div>
+                    <div class="secure-note"><i class="fas fa-university"></i> OPay / Bank Transfer / USSD / Card</div>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Buy Now',
+            cancelButtonText: 'Back',
+            focusConfirm: false,
+            allowOutsideClick: false,
+            customClass: { popup: 'swal2-popup', confirmButton: 'swal2-confirm', cancelButton: 'swal2-cancel' },
+            preConfirm: () => {
+                try {
+                    const formattedPhone = validateNigeriaPhone(document.getElementById('data-phone').value.trim());
+                    const emailInput = document.getElementById('data-email').value.trim();
+                    if (!emailInput) throw new Error('Email address is required');
+                    if (!isValidEmail(emailInput)) throw new Error('Enter a valid email address');
+                    return { phone: formattedPhone, email: emailInput };
+                } catch (err) { Swal.showValidationMessage(err.message); return false; }
+            }
+        }).then((result) => {
+            if (result.isConfirmed && result.value) {
+                initiateDataPayment(bundle, result.value.phone, result.value.email);
+            }
+        });
+        setTimeout(() => document.getElementById('data-phone')?.focus(), 80);
+    }
+
+    function initiateDataPayment(bundle, recipientPhone, customerEmail) {
+        if (isProcessing) return;
+        isProcessing = true;
+
+        const txRef = 'N-DATA-' + Date.now();
+        const amountInKobo = bundle.priceNGN * 100;
+
+        sessionStorage.setItem('pendingDataBundle', JSON.stringify({
+            bundleTitle: bundle.title,
+            price: bundle.priceNGN,
+            phone: recipientPhone,
+            email: customerEmail,
+            txRef
+        }));
+
+        const handler = PaystackPop.setup({
+            key: PAYSTACK_PUBLIC_KEY,
+            email: customerEmail,
+            amount: amountInKobo,
+            currency: 'NGN',
+            ref: txRef,
+            channels: PAYMENT_CHANNELS,   // ← OPay first
+            metadata: {
+                bundle_name: bundle.title,
+                recipient_phone: recipientPhone
+            },
+            callback: function(response) {
+                const pending = sessionStorage.getItem('pendingDataBundle');
+                if (pending) {
+                    const data = JSON.parse(pending);
+                    showDetailedSuccessWithESIM(data.bundleTitle, data.phone, data.price, data.email);
+                    sessionStorage.removeItem('pendingDataBundle');
+                } else {
+                    Swal.fire('Success', 'Payment received. Data will be activated shortly.', 'success');
+                }
+                isProcessing = false;
+            },
+            onClose: function() {
+                Swal.fire({
+                    title: 'Payment window closed',
+                    text: 'If you completed payment, click "I have paid" to confirm.',
+                    icon: 'question',
+                    showDenyButton: true,
+                    confirmButtonText: 'I have paid',
+                    denyButtonText: 'Cancel'
+                }).then(async res => {
+                    if (res.isConfirmed) {
+                        const pending = sessionStorage.getItem('pendingDataBundle');
+                        if (pending) {
+                            const data = JSON.parse(pending);
+                            await showDetailedSuccessWithESIM(data.bundleTitle, data.phone, data.price, data.email);
+                            sessionStorage.removeItem('pendingDataBundle');
+                        } else {
+                            Swal.fire('Error', 'No pending transaction found.', 'error');
+                        }
+                    }
+                    isProcessing = false;
+                });
+            }
+        });
+
+        handler.openIframe();
+    }
+
+    async function showDetailedSuccessWithESIM(bundleTitle, recipientPhone234, amount, customerEmail) {
+        const displayPhone = formatPhoneDisplay(recipientPhone234);
+        const result = await Swal.fire({
+            title: '✅ Payment Successful!',
+            html: `
+                <div class="status-modal-content">
+                    <div class="status-icon" style="color:#1d541d;"><i class="fas fa-check-circle"></i></div>
+                    <div class="status-details">
+                        <div><strong>${bundleTitle}</strong></div>
+                        <div>📱 ${displayPhone}</div>
+                        <div style="font-weight:700; margin-top:0.3rem;">₦ ${amount}</div>
+                    </div>
+                    <div style="margin: 0.8rem 0; background:#e6f3e6; padding:0.7rem; border-radius:12px; border:1px solid #2d7a2d;">
+                        <i class="fas fa-sim-card" style="font-size:1.2rem;"></i><br>
+                        <strong>Do you have a Starlink eSIM linked to your phone number?</strong><br>
+                        <span style="font-size:0.75rem;">If No, get eSIM now – your Starlink data will not work without a Starlink eSIM.</span>
+                    </div>
+                </div>
+            `,
+            showConfirmButton: true,
+            confirmButtonText: 'Yes, I have eSIM',
+            showDenyButton: true,
+            denyButtonText: '✨ Get eSIM (₦1,500)',
+            customClass: { confirmButton: 'secondary-yes-btn', denyButton: 'prominent-esim-btn' },
+            focusDeny: true,
+            reverseButtons: true
+        });
+
+        if (result.isDenied) {
+            await purchaseESIM(recipientPhone234, customerEmail);
+        } else if (result.isConfirmed) {
+            showToast('Thank you! Your data bundle will be activated shortly.');
+        }
+    }
+
+    async function purchaseESIM(phoneNumber234, customerEmail) {
+        if (isESIMProcessing) return;
+        isESIMProcessing = true;
+
+        const txRef = 'N-ESIM-' + Date.now();
+        const amountInKobo = 1500 * 100;
+
+        sessionStorage.setItem('pendingESIM', JSON.stringify({
+            phone: phoneNumber234,
+            email: customerEmail,
+            txRef
+        }));
+
+        const handler = PaystackPop.setup({
+            key: PAYSTACK_PUBLIC_KEY,
+            email: customerEmail,
+            amount: amountInKobo,
+            currency: 'NGN',
+            ref: txRef,
+            channels: PAYMENT_CHANNELS,   // ← OPay first
+            metadata: {
+                product: 'Starlink eSIM',
+                recipient_phone: phoneNumber234
+            },
+            callback: function(response) {
+                const pending = sessionStorage.getItem('pendingESIM');
+                if (pending) {
+                    const data = JSON.parse(pending);
+                    showESIMSuccess(data.phone, data.email);
+                    sessionStorage.removeItem('pendingESIM');
+                } else {
+                    Swal.fire('eSIM Purchased!', 'Check your email for installation instructions.', 'success');
+                }
+                isESIMProcessing = false;
+            },
+            onClose: function() {
+                Swal.fire({
+                    title: 'eSIM window closed',
+                    text: 'If you completed payment, click "I have paid" to confirm.',
+                    icon: 'question',
+                    showDenyButton: true,
+                    confirmButtonText: 'I have paid',
+                    denyButtonText: 'Cancel'
+                }).then(async res => {
+                    if (res.isConfirmed) {
+                        const pending = sessionStorage.getItem('pendingESIM');
+                        if (pending) {
+                            const data = JSON.parse(pending);
+                            await showESIMSuccess(data.phone, data.email);
+                            sessionStorage.removeItem('pendingESIM');
+                        }
+                    }
+                    isESIMProcessing = false;
+                });
+            }
+        });
+
+        handler.openIframe();
+    }
+
+    async function showESIMSuccess(phone234, email) {
+        const displayPhone = formatPhoneDisplay(phone234);
+        await Swal.fire({
+            title: 'eSIM Purchased!',
+            html: `
+                <div class="status-modal-content">
+                    <div class="status-icon" style="color:#1d541d;"><i class="fas fa-sim-card"></i></div>
+                    <div class="status-details">
+                        <strong>Starlink eSIM</strong><br>
+                        Activated for ${displayPhone}<br>
+                        📧 Check ${email} for QR code
+                    </div>
+                    <p style="font-size:0.7rem;">Installation instructions sent to your email.</p>
+                </div>
+            `,
+            confirmButtonText: 'Great!',
+            confirmButtonColor: '#1d541d'
+        });
+    }
+
+    function initPage() {
+        renderAllBundles();
+        setupEventListeners();
+        document.querySelector('[data-category="all"]').classList.add('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>
