@@ -168,42 +168,44 @@
     // ⚡ Priority order: OPay → Bank Transfer → Mobile Money → Card
     const PAYMENT_CHANNELS = ['opay', 'bank_transfer', 'mobile_money', 'card'];
 
-    const bundleData = {
-        daily: {
-            id: 'daily', title: 'Daily Bundles', icon: 'fas fa-sun', subtitle: 'Short-term heavy usage',
-            bundles: [
-                { id: 1, title: '24 Hours - 5GB', subtitle: 'Fast daily data', priceNGN: 450, badge: null },
-                { id: 2, title: '24 Hours - 10GB', subtitle: 'Double data intensive', priceNGN: 750, badge: 'HOT' }
-            ]
-        },
-        weekly: {
-            id: 'weekly', title: 'Weekly Bundles', icon: 'fas fa-calendar-week', subtitle: 'Ideal for weekly browsing',
-            bundles: [
-                { id: 3, title: '3 Days - 8GB', subtitle: 'Weekend extreme', priceNGN: 1000, badge: 'VALUE' },
-                { id: 4, title: '7 Days - 12GB', subtitle: 'Full week connectivity', priceNGN: 1200, badge: null },
-                { id: 5, title: '7 Days - 20GB', subtitle: 'High data streaming', priceNGN: 1600, badge: null },
-                { id: 6, title: '14 Days - 15GB', subtitle: 'Two-week balanced', priceNGN: 1350, badge: null }
-            ]
-        },
-        monthly: {
-            id: 'monthly', title: 'Monthly Bundles', icon: 'fas fa-calendar-alt', subtitle: 'Best value for regular users',
-            bundles: [
-                { id: 7, title: '21 Days - 18GB', subtitle: 'Three-week package', priceNGN: 1450, badge: null },
-                { id: 8, title: '30 Days - 25GB', subtitle: 'Best seller', priceNGN: 1950, badge: 'POPULAR' },
-                { id: 9, title: '30 Days - 50GB', subtitle: 'Double data monthly', priceNGN: 2900, badge: null },
-                { id: 10, title: '30 Days - 100GB', subtitle: 'Heavy user', priceNGN: 4500, badge: 'HOT' }
-            ]
-        },
-        unlimited: {
-            id: 'unlimited', title: 'Unlimited Bundles', icon: 'fas fa-infinity', subtitle: 'Truly unlimited',
-            bundles: [
-                { id: 11, title: '3 Days - Unlimited', subtitle: 'Short unlimited', priceNGN: 1100, badge: null },
-                { id: 12, title: '7 Days - Unlimited', subtitle: 'Week unlimited', priceNGN: 1800, badge: null },
-                { id: 14, title: '14 Days - Unlimited', subtitle: 'Two weeks unlimited', priceNGN: 1900, badge: 'VALUE' },
-                { id: 13, title: '30 Days - Unlimited', subtitle: 'Full month', priceNGN: 3400, badge: 'POPULAR' }
-            ]
-        }
-    };
+    const CONVERSION_RATE = 100; // 1 GHS = 100 NGN (so 5GB 24H = ₦1,000)
+
+const bundleData = {
+    daily: {
+        id: 'daily', title: 'Daily Bundles', icon: 'fas fa-sun', subtitle: 'Short-term heavy usage',
+        bundles: [
+            { id: 1, title: '24 Hours - 5GB', subtitle: 'Fast daily data', priceNGN: 10 * CONVERSION_RATE, badge: null },          // ₦1,000
+            { id: 2, title: '24 Hours - 10GB', subtitle: 'Double data intensive', priceNGN: 20 * CONVERSION_RATE, badge: 'HOT' } // ₦2,000
+        ]
+    },
+    weekly: {
+        id: 'weekly', title: 'Weekly Bundles', icon: 'fas fa-calendar-week', subtitle: 'Ideal for weekly browsing',
+        bundles: [
+            { id: 3, title: '3 Days - 8GB', subtitle: 'Weekend extreme', priceNGN: 16 * CONVERSION_RATE, badge: 'VALUE' },        // ₦1,600
+            { id: 4, title: '7 Days - 12GB', subtitle: 'Full week connectivity', priceNGN: 24 * CONVERSION_RATE, badge: null },   // ₦2,400
+            { id: 6, title: '14 Days - 15GB', subtitle: 'Two-week balanced', priceNGN: 30 * CONVERSION_RATE, badge: null },       // ₦3,000
+            { id: 5, title: '7 Days - 20GB', subtitle: 'High data streaming', priceNGN: 40 * CONVERSION_RATE, badge: null }       // ₦4,000
+        ]
+    },
+    monthly: {
+        id: 'monthly', title: 'Monthly Bundles', icon: 'fas fa-calendar-alt', subtitle: 'Best value for regular users',
+        bundles: [
+            { id: 7, title: '21 Days - 18GB', subtitle: 'Three-week package', priceNGN: 36 * CONVERSION_RATE, badge: null },     // ₦3,600
+            { id: 8, title: '30 Days - 25GB', subtitle: 'Best seller', priceNGN: 50 * CONVERSION_RATE, badge: 'POPULAR' },       // ₦5,000
+            { id: 9, title: '30 Days - 50GB', subtitle: 'Double data monthly', priceNGN: 100 * CONVERSION_RATE, badge: null },   // ₦10,000
+            { id: 10, title: '30 Days - 100GB', subtitle: 'Heavy user', priceNGN: 200 * CONVERSION_RATE, badge: 'HOT' }          // ₦20,000
+        ]
+    },
+    unlimited: {
+        id: 'unlimited', title: 'Unlimited Bundles', icon: 'fas fa-infinity', subtitle: 'Truly unlimited',
+        bundles: [
+            { id: 11, title: '3 Days - Unlimited', subtitle: 'Short unlimited', priceNGN: 40 * CONVERSION_RATE, badge: null },    // ₦4,000
+            { id: 12, title: '7 Days - Unlimited', subtitle: 'Week unlimited', priceNGN: 70 * CONVERSION_RATE, badge: null },    // ₦7,000
+            { id: 14, title: '14 Days - Unlimited', subtitle: 'Two weeks unlimited', priceNGN: 130 * CONVERSION_RATE, badge: 'VALUE' }, // ₦13,000
+            { id: 13, title: '30 Days - Unlimited', subtitle: 'Full month', priceNGN: 220 * CONVERSION_RATE, badge: 'POPULAR' }  // ₦22,000
+        ]
+    }
+};
 
     let isProcessing = false;
     let isESIMProcessing = false;
